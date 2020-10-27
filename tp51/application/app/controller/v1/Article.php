@@ -3,8 +3,8 @@
 namespace application\app\controller\v1;
 
 use think\Controller;
+use application\app\model\ArticleModel;
 use Log;
-use Cache;
 // use Log; // 日志类
 
 // request 处理库, 继承think\Controller后可直接使用$this->request属性, 这里不用再引入
@@ -29,11 +29,7 @@ class Article extends Controller
 
 	protected function valid()
 	{
-		// 这里可以验证签名
-		Log::write('这里可以验证请求合法性');
-
-		$this->redis = Cache::store('redis')->handler();
-
+		$this->article_model = new ArticleModel;
 	}
 
 	// 在请求list时, 统计总访问次数, 简单防爬
@@ -49,7 +45,11 @@ class Article extends Controller
 
 	public function info()
 	{
-		echo "info";
+		$article_id = $this->request->get('article_id');
+
+		$article = $this->article_model->get($article_id);
+
+		return $article;
 	}
 
 	/* 
@@ -63,36 +63,23 @@ class Article extends Controller
 	{
 		$post = $this->request->post();
 
-
-		$article_id = $this->get_art_id();
-
-		// boolean
-		$this->redis->hmset("article:{$article_id}", [
+		$data = [
 			'title'=> $post['title'],
 			'content'=> $post['content'],
 			'time'=> time(),
 			'poster'=> 'user:' . $post['user_id'],
 			'link'=> $post['link'],
 			'votes'=> 0
-		]);
+		];
 		
-		return 'ok';
+		$this->article_model->add($data);
+
+		return ['errno'=> 0, 'data'=> NULL, 'msg'=> "ok"];
 	}
 
 	public function like()
 	{
 		return 'like';
 	}
-
-
-
-	/*
-	* 文章id生成器
-	*/
-	private function get_art_id()
-	{
-		return $this->redis->incrby('article:generator', 1);
-	}
-
 
 }
