@@ -32,7 +32,7 @@ class Article extends Controller
 		$this->article_model = new ArticleModel;
 	}
 
-	// 在请求list时, 统计总访问次数, 简单防爬
+	// 可以在请求list时, 统计总访问次数, 简单防爬
 	protected function add_times()
 	{
 		Log::write('times ++');
@@ -79,7 +79,15 @@ class Article extends Controller
 
 	public function like()
 	{
-		return 'like';
+		$post = $this->request->post();
+		$article_id = $post['article_id'];
+		$user_id = $post['user_id'];
+
+		if (!$this->article_model->like($article_id, $user_id)) {
+			return ['errno'=> -1, 'data'=> NULL, 'msg'=> "failed"];
+		}
+
+		return ['errno'=> 0, 'data'=> NULL, 'msg'=> "ok"];
 	}
 
 }

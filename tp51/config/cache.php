@@ -15,12 +15,13 @@
 
 return [
     // 驱动方式
-    'type'   => 'redis',
+    'type'  	=> 	'redis',
     // 缓存保存目录
-    'path'   => '../runtime/cache',
-    'password'=> 'root',
+    'path'   	=> 	'../runtime/cache',
+    'host'		=>	'47.103.25.60',
+    'password'	=> 	'root',
     // 缓存前缀
-    'prefix' => '',
+    'prefix' 	=> 	'',
     // 缓存有效期 0表示永久缓存
-    'expire' => 0,
+    'expire' 	=> 	0,
 ];
