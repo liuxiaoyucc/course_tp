@@ -4,4 +4,4 @@
 *.log
 thinkphp
 .DS_Store
-/config
+/config/cache.php
