@@ -40,7 +40,13 @@ class Article extends Controller
 
 	public function list()
 	{
-		return 'list';
+		
+		$sort_by = $this->request->get('sort_by');
+		$page = $this->request->get('page');
+
+		$articles = $this->article_model->list($page, $sort_by);
+
+		return $articles;
 	}
 
 	public function info()
